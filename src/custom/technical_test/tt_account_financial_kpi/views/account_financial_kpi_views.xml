@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree -->
+    <record id="view_account_financial_kpi_tree" model="ir.ui.view">
+        <field name="name">account.financial.kpi.tree</field>
+        <field name="model">account.financial.kpi</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="value"/>
+                <field name="state"/>
+                <field name="threshold_warning"/>
+                <field name="threshold_critical"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_account_financial_kpi_form" model="ir.ui.view">
+        <field name="name">account.financial.kpi.form</field>
+        <field name="model">account.financial.kpi</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id"/>
+                    </group>
+
+                    <group>
+                        <field name="value" readonly="1"/>
+                        <field name="state" readonly="1"/>
+                    </group>
+
+                    <group>
+                        <field name="threshold_warning"/>
+                        <field name="threshold_critical"/>
+                    </group>
+
+                    <group>
+                        <field name="formula" placeholder="Ej: (acc('4000')-acc('5000'))/acc('4000')*100"/>
+                    </group>
+
+                    <group invisible="not last_error">
+                        <field name="last_error" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban (Tablero) -->
+    <record id="view_account_financial_kpi_kanban" model="ir.ui.view">
+        <field name="name">account.financial.kpi.kanban</field>
+        <field name="model">account.financial.kpi</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="value"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong><t t-esc="record.name.value"/></strong>
+
+                                <t t-set="badge_class"
+                                   t-value="
+                                   'badge ' + (
+                                       record.state.raw_value == 'green' and 'bg-success' or
+                                       record.state.raw_value == 'yellow' and 'bg-warning' or
+                                       'bg-danger'
+                                   )
+                                   "/>
+                                <span t-att-class="badge_class">
+                                    <t t-esc="record.state.value"/>
+                                </span>
+                            </div>
+
+                            <div class="mt-2">
+                                <div><span class="text-muted">Valor:</span> <t t-esc="record.value.value"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_account_financial_kpi_dashboard" model="ir.actions.act_window">
+        <field name="name">KPIs Financieros (Tablero)</field>
+        <field name="res_model">account.financial.kpi</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <record id="action_account_financial_kpi_config" model="ir.actions.act_window">
+        <field name="name">KPIs Financieros (Configuración)</field>
+        <field name="res_model">account.financial.kpi</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menú en Contabilidad -->
+    <menuitem id="menu_account_financial_kpi_root"
+              name="KPIs (Prueba)"
+              parent="account.menu_finance_configuration"
+              sequence="95"/>
+
+    <menuitem id="menu_account_financial_kpi_dashboard"
+              name="Tablero de KPIs"
+              parent="menu_account_financial_kpi_root"
+              action="action_account_financial_kpi_dashboard"
+              sequence="10"/>
+
+    <menuitem id="menu_account_financial_kpi_config"
+              name="Configurar KPIs"
+              parent="menu_account_financial_kpi_root"
+              action="action_account_financial_kpi_config"
+              sequence="20"/>
+
+</odoo>

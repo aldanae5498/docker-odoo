@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_discount_rule_tree" model="ir.ui.view">
+        <field name="name">account.discount.rule.tree</field>
+        <field name="model">account.discount.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="customer_type"/>
+                <field name="discount_percent"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_discount_rule_form" model="ir.ui.view">
+        <field name="name">account.discount.rule.form</field>
+        <field name="model">account.discount.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="customer_type"/>
+                        <field name="discount_percent"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_discount_rules" model="ir.actions.act_window">
+        <field name="name">Reglas de descuento</field>
+        <field name="res_model">account.discount.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_account_discount_root"
+              name="Descuentos"
+              parent="account.menu_finance_configuration"
+              sequence="90"/>
+
+    <menuitem id="menu_account_discount_rules"
+              name="Reglas de descuento"
+              parent="menu_account_discount_root"
+              action="action_account_discount_rules"
+              sequence="10"/>
+</odoo>

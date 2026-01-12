@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payslip_form_inherit_tt_benefits" model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit.tt.benefits</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Beneficios (Prueba)">
+                    <group>
+                        <field name="benefits_applied" readonly="1"/>
+                    </group>
+                    <field name="benefit_line_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="benefit_code"/>
+                            <field name="amount"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

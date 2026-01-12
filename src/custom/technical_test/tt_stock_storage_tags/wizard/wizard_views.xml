@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_storage_tag_wizard_form" model="ir.ui.view">
+        <field name="name">stock.storage.tag.wizard.form</field>
+        <field name="model">stock.storage.tag.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asignar etiquetas">
+                <sheet>
+                    <group>
+                        <field name="product_tmpl_ids" readonly="1" widget="many2many_tags"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                    <footer>
+                        <button string="Aplicar" type="object" name="action_apply" class="btn-primary"/>
+                        <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_storage_tag_wizard" model="ir.actions.act_window">
+        <field name="name">Asignar etiquetas</field>
+        <field name="res_model">stock.storage.tag.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_product_tmpl_ids': active_ids}</field>
+    </record>
+
+    <!-- Botón en producto (sin abrir formulario completo adicional, abre wizard) -->
+    <record id="view_product_template_form_inherit_storage_tag_button" model="ir.ui.view">
+        <field name="name">product.template.form.storage.tag.button</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_storage_tag_wizard"
+                        type="object"
+                        string="Asignar etiquetas"
+                        class="btn-secondary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Acción de servidor -->
+    <record id="server_action_assign_storage_tags" model="ir.actions.server">
+        <field name="name">Asignar etiquetas</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = {
+                'type': 'ir.actions.act_window',
+                'name': 'Asignar etiquetas',
+                'res_model': 'stock.storage.tag.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {
+                    'default_product_tmpl_ids': records.ids,
+                }
+            }
+        </field>
+    </record>
+</odoo>
